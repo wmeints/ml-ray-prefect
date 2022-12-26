@@ -37,7 +37,7 @@ def fill_missing_values(df: dd.DataFrame) -> dd.DataFrame:
     return df
 
 
-@flow(task_runner=RayTaskRunner)
+@flow(name='prepare-data', task_runner=RayTaskRunner)
 def prepare_data(input_file: str, output_file: str) -> None:
     enable_dask_on_ray()
 
