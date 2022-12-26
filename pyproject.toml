@@ -12,10 +12,9 @@ dependencies= [
     "prefect==2.7.3",
     "dask[complete]==2022.12.1",
     "prefect-ray==0.2.2",
-    "ray[default]==2.2.0",
-    "ray[tune]==2.2.0",
-    "ray[air]==2.2.0",
-    "ray[serve]==2.2.0"
+    "ray[data,tune,air,serve,default]==2.2.0",
+    "xgboost==1.7.2",
+    "xgboost-ray==0.1.13"
 ]
 
 [project.optional-dependencies]
