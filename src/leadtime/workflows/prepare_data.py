@@ -52,6 +52,6 @@ def prepare_data(input_file: str, output_file: str) -> None:
 if __name__ == "__main__":
     root_folder = dirname(dirname(dirname(dirname(__file__))))
     input_file = join(root_folder, 'data/raw/lead-times.csv')
-    output_file = join(root_folder, 'data/preprocessed/leadtime.parquet')
+    output_file = join(root_folder, 'data/preprocessed')
 
     prepare_data(input_file, output_file)
