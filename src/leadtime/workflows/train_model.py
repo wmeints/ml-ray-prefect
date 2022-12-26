@@ -2,9 +2,10 @@ from typing import Tuple
 from os.path import join, dirname
 from ray.data import Dataset, read_parquet
 from ray.data.preprocessors import Categorizer, Chain
-from ray.train.xgboost import XGBoostTrainer
+from ray.train.sklearn import SklearnTrainer
 from prefect import flow, task
 from prefect_ray import RayTaskRunner
+from sklearn.ensemble import RandomForestRegressor
 
 
 @task
@@ -28,12 +29,11 @@ def train(ds_train: Dataset, ds_valid: Dataset) -> None:
         Categorizer(columns=categorical_features)
     )
 
-    trainer = XGBoostTrainer(
+    trainer = SklearnTrainer(
+        estimator=RandomForestRegressor(),
         label_column='WACHTTIJD',
-        params={"ojective": "reg:squarederror"},
         datasets={"train": ds_train, "valid": ds_valid},
-        preprocessor=preprocessor,
-        num_boost_rounds=100
+        preprocessor=preprocessor
     )
 
     result = trainer.fit()

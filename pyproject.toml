@@ -8,21 +8,16 @@ name = "leadtime"
 description = "Predict lead time for hospital visits in the Netherlands"
 readme = "README.md"
 requires-python = ">=3.9"
-dependencies= [
+dependencies = [
     "prefect==2.7.3",
     "dask[complete]==2022.12.1",
     "prefect-ray==0.2.2",
     "ray[data,tune,air,serve,default]==2.2.0",
-    "xgboost==1.7.2",
-    "xgboost-ray==0.1.13"
+    "scikit-learn==1.2.0",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest",
-    "bandit",
-    "autopep8"
-]
+dev = ["pytest", "bandit", "autopep8"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

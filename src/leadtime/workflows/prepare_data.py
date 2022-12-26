@@ -1,5 +1,8 @@
+import collections
 from os.path import dirname, join
+
 import dask.dataframe as dd
+import pandas as pd
 from prefect import flow, task
 from prefect_ray import RayTaskRunner
 from ray.util.dask import enable_dask_on_ray
@@ -37,6 +40,27 @@ def fill_missing_values(df: dd.DataFrame) -> dd.DataFrame:
     return df
 
 
+def encode_categorical_features(df: dd.DataFrame) -> dd.DataFrame:
+
+    def transform_batch(df: pd.DataFrame):
+        feature_names = [
+            'TYPE_WACHTTIJD',
+            'SPECIALISME',
+            'ROAZ_REGIO',
+            'TYPE_ZORGINSTELLING'
+        ]
+
+        for feature in feature_names:
+            df[feature] = df[feature].astype('category')
+            codes = df[feature].cat.codes
+
+            df[feature] = codes
+
+        return df
+
+    return df.map_partitions(transform_batch)
+
+
 @flow(name='prepare-data', task_runner=RayTaskRunner)
 def prepare_data(input_file: str, output_file: str) -> None:
     enable_dask_on_ray()
@@ -45,6 +69,7 @@ def prepare_data(input_file: str, output_file: str) -> None:
     dataset = select_features(dataset)
     dataset = drop_invalid_records(dataset)
     dataset = fill_missing_values(dataset)
+    dataset = encode_categorical_features(dataset)
 
     dataset.to_parquet(output_file)
 
